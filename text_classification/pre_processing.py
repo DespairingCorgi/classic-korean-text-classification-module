@@ -101,7 +101,7 @@ def split_data(data, feature_col="ko", label_col="label", train_size = .8, rando
     return train_feature, test_feature, train_label, test_label    
 
 
-def label_to_idx(data, label_col, idx_dict, int_labelcol, \
+def label_to_idx(data, label_col, int_label_col, idx_dict, \
                 save_dict=False, dict_name="meta.json", \
                 save_df = False, data_name="idx_data.csv", \
                 inplace=False):
@@ -111,8 +111,8 @@ def label_to_idx(data, label_col, idx_dict, int_labelcol, \
     
     df = open_data(data)
     if inplace:
-        int_labelcol = label_col
-    df[int_labelcol] = df[label_col].apply(lambda l: idx_dict[l])
+        int_label_col = label_col
+    df[int_label_col] = df[label_col].apply(lambda l: idx_dict[l])
     
     if save_df:
         extension = data_name.split('.')[-1]
