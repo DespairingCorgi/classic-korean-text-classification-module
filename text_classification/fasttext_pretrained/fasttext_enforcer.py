@@ -4,27 +4,40 @@
 
 import fasttext.util
 import numpy as np
-from . import * # import module variables
-from .. import okt
+#from . import * # import module variables
+#from .. import tokenizer
 import io
 import os
+import shutil
 
 def download_fasttext_model(lang='ko'):
+    main_dir = os.getcwd()
+    # print(main_dir)
+    script_dir = os.path.dirname(__file__)
+    # print(script_dir)
+    model_dir = os.path.join(script_dir, 'models')
+    # print(model_dir)
+    if not os.path.exists(model_dir):
+        os.mkdir(model_dir)
+    os.chdir(model_dir)
     fasttext.util.download_model(lang, if_exists='ignore')
+    os.chdir(main_dir)
 
-def tokenize(input):
-    if isinstance(input, str):
-        return okt.morphs(input)
-    elif isinstance(input, list):
-        return [okt.morphs(s) for s in input]
-    else:
-        raise Exception("tokenize input error: input type must be str or list")
+# def tokenize(input):
+#     if isinstance(input, str):
+#         return tokenizer.morphs(input)
+#     elif isinstance(input, list):
+#         return [tokenizer.morphs(s) for s in input]
+#     else:
+#         raise Exception("tokenize input error: input type must be str or list")
 
-def load_model(dir=f'{MODELPATH}/cc.ko.bin'):
+def load_model(model_name='cc.ko.300.bin'):
+    dir = os.path.join(os.path.dirname(__file__),'models',model_name)
     fastext_model = fasttext.load_model(dir)
+    #print(type(fastext_model))
     return fastext_model
 
-def train_model(texts, modelname=f'{MODELPATH}/cc.ko.bin', save=False):
+def train_model(texts, modelname=os.path.join(os.path.dirname(__file__),'models','cc.ko.bin'), save=False):
     # case1 -> texts is str which is filename
     if isinstance(texts, str):
         model = fasttext.train_unsupervised(texts, model='skipgram')
@@ -42,8 +55,6 @@ def train_model(texts, modelname=f'{MODELPATH}/cc.ko.bin', save=False):
     return model
     
 def get_fasttext_vectors(model, input):
-    if isinstance(input, str):
-        return model.get_sentence_vector(input)
-    elif isinstance(input, list):
-        return [model.get_sentence_vector(s) for s in input]
-    
+    input = [s.replace('\n', ' ') for s in input]
+    output = np.array([model.get_sentence_vector(s) for s in input])
+    return output

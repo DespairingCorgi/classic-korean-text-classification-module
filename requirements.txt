@@ -1,4 +1,5 @@
 scikit-learn
 konlpy
 pandas
-json
+jsons
+warings

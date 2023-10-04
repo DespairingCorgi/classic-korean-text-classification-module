@@ -3,9 +3,9 @@ from . import tokenizer
 import pandas as pd
 import json
 
-from fasttext_pretrained.fasttext_enforcer import load_model, get_fasttext_vectors
+from .fasttext_pretrained.fasttext_enforcer import load_model, get_fasttext_vectors
 
-fasttext_model = None
+# fasttext_model = None
 
 def okt_process(texts):
     return tokenizer.morphs(texts)
@@ -48,17 +48,20 @@ def tokenizing(data, feature_col = "ko"):
     data[feature_col] = data[feature_col].apply(lambda r : ' '.join(tokenizer.morphs(r)))
     return data
 
-def fasttext_vectorize(data, feature_col = "ko"):
-    global fasttext_model
-    if fasttext_model == None:
-        fasttext_model = load_model()
-    else:
-        data[feature_col] = get_fasttext_vectors(fasttext_model, data[feature_col])
+# def fasttext_vectorize(data, feature_col = "ko"):
+#     global fasttext_model
+#     if fasttext_model == None:
+#         fasttext_model = load_model()
+#     #print(data[feature_col])
+#     #print(get_fasttext_vectors(fasttext_model, data[feature_col]))
+#     if isinstance(data, pd.DataFrame):
+#         return get_fasttext_vectors(fasttext_model, data[feature_col].values.tolist())
+#     elif isinstance(data, list):
+#         return get_fasttext_vectors(fasttext_model, data)
     
 def split_data(data, feature_col="ko", label_col="label", train_size = .8, random_seed = 42,\
             under_sampling = True, under_sample_size = 1.0, under_sample_random_seed = 42,\
-            require_tokenize = True, \
-            use_fasttext = False):
+            require_tokenize = True):
     '''
         read data
             data: (pandas.DataFrame | str) dataframe or filepath 
@@ -80,11 +83,9 @@ def split_data(data, feature_col="ko", label_col="label", train_size = .8, rando
     except Exception as e:
         raise e
     
-    if require_tokenize and not use_fasttext:
+    if require_tokenize:
         data = tokenizing(data, feature_col=feature_col)
         #data[label_col] = data[label_col].apply(lambda r : ' '.join(tokenizer.morphs(r)))
-    if use_fasttext:
-        data = fasttext_vectorize(data, feature_col=feature_col)
     
     # leave required data features    
     data = data[[feature_col, label_col]]

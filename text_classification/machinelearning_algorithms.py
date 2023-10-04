@@ -6,7 +6,7 @@ from sklearn.ensemble import RandomForestClassifier
 from . import ml
 
 @ml
-def multnaive(x_train, x_test, y_train, y_test):
+def multnaive(x_train, x_test, y_train, y_test, **kwargs):
     naive_model = MultinomialNB()
     naive_model.fit(x_train, y_train)
     return naive_model, "multinomial naive"

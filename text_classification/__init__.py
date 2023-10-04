@@ -1,15 +1,42 @@
 from konlpy.tag import Okt
 from sklearn.feature_extraction.text import TfidfVectorizer
-
 from sklearn.metrics import classification_report, confusion_matrix
+from .fasttext_pretrained.fasttext_enforcer import get_fasttext_vectors, load_model
 
 tokenizer = Okt()
 
+fasttext_model = None
+
+tf_vec = ['tf', 'tfidfvectorizer', 'tfvectorizer']
+ft_vec = ['ft', 'fasttext', 'fast_text']
+
 def ml(func):
     def wrapper(*args, **kwargs):
-        vectorizer = TfidfVectorizer()
-        train_vec = vectorizer.fit_transform(args[0])
-        test_vec = vectorizer.transform(args[1])        
+        # for arg in args:
+        #     print(type(arg))
+        global fasttext_model
+        vector_mode = kwargs['vector_mode'] if 'vector_mode' in kwargs.keys() else 'tf'.lower()
+        
+        if func.__name__ == 'multnaive' and vector_mode in ft_vec:
+            print("you cannot use fasttext on multinomial naive baysis change mode to tfvectorizer...")
+            vector_mode = 'tf'
+        
+        if vector_mode in tf_vec:
+            vectorizer = TfidfVectorizer()
+            train_vec = vectorizer.fit_transform(args[0])
+            test_vec = vectorizer.transform(args[1])        
+        elif vector_mode.lower() in ft_vec:
+            if fasttext_model == None:
+                print("load new model...")
+                fasttext_model = load_model()
+            train_vec = get_fasttext_vectors(fasttext_model, args[0].values.tolist())
+            test_vec = get_fasttext_vectors(fasttext_model, args[1].values.tolist())
+        else:
+            pass
+        
+        #print(train_vec.shape)
+        #print(test_vec.shape)
+        
         model,method = func(train_vec, test_vec, args[2], args[3], **kwargs)
         pred = model.predict(test_vec)
         print("="*100)
