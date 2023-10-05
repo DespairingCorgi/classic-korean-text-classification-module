@@ -6,6 +6,7 @@ from .fasttext_pretrained.fasttext_enforcer import get_fasttext_vectors, load_mo
 tokenizer = Okt()
 
 fasttext_model = None
+cur_model = None
 
 tf_vec = ['tf', 'tfidfvectorizer', 'tfvectorizer']
 ft_vec = ['ft', 'fasttext', 'fast_text']
@@ -15,7 +16,10 @@ def ml(func):
         # for arg in args:
         #     print(type(arg))
         global fasttext_model
+        global cur_model
+        
         vector_mode = kwargs['vector_mode'] if 'vector_mode' in kwargs.keys() else 'tf'.lower()
+        model = kwargs['model'] if 'model' in kwargs.keys() else None        
         
         if func.__name__ == 'multnaive' and vector_mode in ft_vec:
             print("you cannot use fasttext on multinomial naive baysis change mode to tfvectorizer...")
@@ -28,7 +32,15 @@ def ml(func):
         elif vector_mode.lower() in ft_vec:
             if fasttext_model == None:
                 print("load new model...")
-                fasttext_model = load_model()
+                if model == None:
+                    fasttext_model = load_model()
+                else:
+                    fasttext_model = load_model(model_name=model)
+            else:
+                if model != cur_model:
+                    fasttext_model = load_model(model_name=model)
+            cur_model = model
+            
             train_vec = get_fasttext_vectors(fasttext_model, args[0].values.tolist())
             test_vec = get_fasttext_vectors(fasttext_model, args[1].values.tolist())
         else:

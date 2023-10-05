@@ -46,7 +46,7 @@ def train_model(texts, model_name='my_model.bin', save=False):
     if model_name[-1] != 'bin':
         raise Exception("the model requires .bin extension")
     
-    model_name = os.path.join(os.path.dirname(__file__),'cutom_models',model_name)
+    model_path = os.path.join(os.path.dirname(__file__),'cutom_models',model_name)
     
     # case1 -> texts is str which is filename
     if isinstance(texts, str):
@@ -60,7 +60,7 @@ def train_model(texts, model_name='my_model.bin', save=False):
         raise Exception('train model input error: input type must be str or list')
     
     if save:
-        model.save_model(model_name)
+        model.save_model(model_path)
             
     return model
     
