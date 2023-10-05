@@ -33,11 +33,21 @@ def download_fasttext_model(lang='ko'):
 
 def load_model(model_name='cc.ko.300.bin'):
     dir = os.path.join(os.path.dirname(__file__),'models',model_name)
-    fastext_model = fasttext.load_model(dir)
+    model = fasttext.load_model(dir)
     #print(type(fastext_model))
-    return fastext_model
+    return model
 
-def train_model(texts, modelname=os.path.join(os.path.dirname(__file__),'models','cc.ko.bin'), save=False):
+def train_model(texts, model_name='my_model.bin', save=False):
+
+    model_query = model_name.split('.')
+    
+    if len(model_query) < 2 :
+        raise Exception("the file name and extension must exist")
+    if model_name[-1] != 'bin':
+        raise Exception("the model requires .bin extension")
+    
+    model_name = os.path.join(os.path.dirname(__file__),'cutom_models',model_name)
+    
     # case1 -> texts is str which is filename
     if isinstance(texts, str):
         model = fasttext.train_unsupervised(texts, model='skipgram')
@@ -50,7 +60,7 @@ def train_model(texts, modelname=os.path.join(os.path.dirname(__file__),'models'
         raise Exception('train model input error: input type must be str or list')
     
     if save:
-        model.save_model(modelname)
+        model.save_model(model_name)
             
     return model
     
