@@ -11,7 +11,7 @@ cur_model = None
 tf_vec = ['tf', 'tfidfvectorizer', 'tfvectorizer']
 ft_vec = ['ft', 'fasttext', 'fast_text']
 
-def ml(func):
+def sklearn_ml(func):
     def wrapper(*args, **kwargs):
         # for arg in args:
         #     print(type(arg))

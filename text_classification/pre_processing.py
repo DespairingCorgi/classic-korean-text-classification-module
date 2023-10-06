@@ -37,7 +37,7 @@ def open_data(data) -> pd.DataFrame:
         elif extension == "json":
             data = pd.read_json(data)
         else:
-            raise Exception("error ocurred: file extension must be ")
+            raise Exception("error ocurred: file extension must be either csv or json")
     elif isinstance(data, pd.DataFrame):
         print("data is already a pandas.DataFrame object")
     else:
