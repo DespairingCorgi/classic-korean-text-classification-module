@@ -131,7 +131,6 @@ def train_supervised_model(text_file_name, save_name="", save_model = False):
     if save_name:
         validate_file_name(save_name, 'bin', "save_name input")
     
-    
     text_file_path = os.path.join(os.path.dirname(__file__), 'tmp', text_file_name)    
     model = fasttext.train_supervised(text_file_path)
 
@@ -188,3 +187,8 @@ def test_supervised_model(model_name, test_file_name):
     print("\nConfusion Matrix:")
     print(conf_matrix)    
     
+    
+def save_fasttext_model(model, model_name):
+    validate_file_name(model_name, 'bin', "model_name input")
+    path = os.path.join(os.path.dirname(__file__), 'models', model_name)
+    model.save_model(path)

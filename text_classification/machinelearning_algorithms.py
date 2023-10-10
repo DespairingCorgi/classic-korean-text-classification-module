@@ -47,3 +47,5 @@ def fasttext_supervised(x_train, x_test, y_train, y_test, \
         model = fasttext.load_model(custom_model)
     
     test_supervised_model(model, test_txt)
+    
+    return model
