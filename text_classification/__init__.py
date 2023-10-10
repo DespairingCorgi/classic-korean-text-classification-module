@@ -56,6 +56,9 @@ def sklearn_ml(func):
         print(classification_report(args[3], pred))
         print("\nconfusion matrix:")
         print(confusion_matrix(args[3], pred), "\n")
-        print("="*100) 
+        print("="*100)
+        
+        return model
+        
     return wrapper
         

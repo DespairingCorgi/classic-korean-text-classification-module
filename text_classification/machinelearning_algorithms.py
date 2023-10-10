@@ -53,8 +53,13 @@ def fasttext_supervised(x_train, x_test, y_train, y_test, \
     return model
 
 @sklearn_ml
-def catboost_classification(x_train, x_test, y_train, y_test, **kwargs):    
-    cb_model = CatBoostClassifier(iterations=500, depth=6, learning_rate=0.1, verbose=0)
+def catboost_classification(x_train, x_test, y_train, y_test, **kwargs):
+    
+    its = kwargs['iteration'] if 'iteration' in kwargs.keys() else 500
+    d = kwargs['depth'] if 'iteration' in kwargs.keys() else 500
+    lr = kwargs['learning_rate'] if 'iteration' in kwargs.keys() else .1
+    
+    cb_model = CatBoostClassifier(iterations=its, depth=d, learning_rate=lr, verbose=0)
     print("learning...")
     cb_model.fit(x_train, y_train)
     return cb_model, "catboost classifier"

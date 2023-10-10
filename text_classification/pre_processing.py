@@ -61,7 +61,8 @@ def tokenizing(data, feature_col = "ko"):
     
 def split_data(data, feature_col="ko", label_col="label", train_size = .8, random_seed = 42,\
             under_sampling = True, under_sample_size = 1.0, under_sample_random_seed = 42,\
-            require_tokenize = True):
+            require_tokenize = True,\
+            stratify=False):
     '''
         read data
             data: (pandas.DataFrame | str) dataframe or filepath 
@@ -95,10 +96,12 @@ def split_data(data, feature_col="ko", label_col="label", train_size = .8, rando
         data = under_sample(data, label_col="label", undersample_size=under_sample_size, random_seed=under_sample_random_seed)
     
     
+    be_stratify =  data[label_col] if stratify else None
     train_feature, test_feature, train_label, test_label = train_test_split(data[feature_col],\
                                                                             data[label_col],\
                                                                             train_size=train_size,\
-                                                                            random_state=random_seed)
+                                                                            random_state=random_seed, \
+                                                                            stratify=be_stratify)
     title = "shape"
     total_width = 50
     formatted_title = "{:=^{width}}".format(title, width=total_width)
