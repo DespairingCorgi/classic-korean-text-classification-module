@@ -8,6 +8,8 @@ from .fasttext_pretrained.fasttext_enforcer import series_to_ft_supervised_forma
 
 import fasttext
 
+from catboost import CatBoostClassifier
+
 @sklearn_ml
 def multnaive(x_train, x_test, y_train, y_test, **kwargs):
     naive_model = MultinomialNB()
@@ -49,3 +51,10 @@ def fasttext_supervised(x_train, x_test, y_train, y_test, \
     test_supervised_model(model, test_txt)
     
     return model
+
+@sklearn_ml
+def catboost_classification(x_train, x_test, y_train, y_test, **kwargs):    
+    cb_model = CatBoostClassifier(iterations=500, depth=6, learning_rate=0.1, verbose=0)
+    print("learning...")
+    cb_model.fit(x_train, y_train)
+    return cb_model, "catboost classifier"
