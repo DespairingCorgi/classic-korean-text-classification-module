@@ -44,8 +44,11 @@ def open_data(data) -> pd.DataFrame:
         raise Exception("erro ocurred: it is neither str or pandas.DataFrame")
     return data
 
-def tokenizing(data, feature_col = "ko"):
-    data[feature_col] = data[feature_col].apply(lambda r : ' '.join(tokenizer.morphs(r)))
+def tokenizing(data, feature_col = "ko", token_col = "okt", inplace = True):
+    if inplace:
+        data[feature_col] = data[feature_col].apply(lambda r : ' '.join(tokenizer.morphs(r)))
+    else:
+        data[token_col] = data[feature_col].apply(lambda r : ' '.join(tokenizer.morphs(r)))
     return data
 
 # def fasttext_vectorize(data, feature_col = "ko"):
@@ -61,7 +64,6 @@ def tokenizing(data, feature_col = "ko"):
     
 def split_data(data, feature_col="ko", label_col="label", train_size = .8, random_seed = 42,\
             under_sampling = True, under_sample_size = 1.0, under_sample_random_seed = 42,\
-            require_tokenize = True,\
             stratify=False):
     '''
         read data
@@ -83,10 +85,6 @@ def split_data(data, feature_col="ko", label_col="label", train_size = .8, rando
         data = open_data(data)
     except Exception as e:
         raise e
-    
-    if require_tokenize:
-        data = tokenizing(data, feature_col=feature_col)
-        #data[label_col] = data[label_col].apply(lambda r : ' '.join(tokenizer.morphs(r)))
     
     # leave required data features    
     data = data[[feature_col, label_col]]
