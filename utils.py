@@ -3,6 +3,7 @@ import os
 cur_workspace = os.getcwd()
 
 def set_workspace(path, option='y'):
+    global cur_workspace
     
     '''
         **caution: you must provide absolute path of directory
@@ -19,18 +20,21 @@ def set_workspace(path, option='y'):
         print(f"the path established to {cur_workspace}")
         cur_workspace = path
         return path
+    cur_workspace = path   
     print(f"path exists set workspace path to {cur_workspace}")
-    cur_workspace = path    
     return path
 
 def reset_workspace():
+    global cur_workspace
     cur_workspace = os.getcwd()
     print(f"work space resseted to {cur_workspace}")
     return cur_workspace
     
 def workspace(data_path):
+    global cur_workspace
     lst = data_path.split('/')
     return os.path.join(cur_workspace, *lst)
 
 def get_workspace():
+    global cur_workspace
     return cur_workspace
