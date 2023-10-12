@@ -11,7 +11,7 @@ import os
 
 workspace_path = os.getcwd()
 
-def set_workspace(path, option='n'):
+def set_workspace(path, option='y'):
     global workspace_path
     option = option.lower()
     if not os.path.exists(path):
@@ -28,4 +28,5 @@ def set_workspace(path, option='n'):
     return path
     
 def use_workspace(data_path):
-    return os.path.join(workspace_path, data_path)
+    lst = data_path.split('/')
+    return os.path.join(workspace_path, *lst)
