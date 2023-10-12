@@ -7,8 +7,8 @@ from .fasttext_pretrained.fasttext_enforcer import load_model, get_fasttext_vect
 
 # fasttext_model = None
 
-def okt_process(texts):
-    return tokenizer.morphs(texts)
+def okt_process(text):
+    return ' '.join(tokenizer.morphs(text))
 
 def under_sample(data, label_col="label", undersample_size = 1.0, random_seed=42) -> pd.DataFrame:
     '''
@@ -44,12 +44,35 @@ def open_data(data) -> pd.DataFrame:
         raise Exception("erro ocurred: it is neither str or pandas.DataFrame")
     return data
 
-def tokenizing(data, feature_col = "ko", token_col = "okt", inplace = True):
+def df_tokenize(data, feature_col = "ko", token_col = "okt", inplace = False):
+    '''
+        data: data path or dataframe
+        feature_col: (required) column which requires tokenizig
+         
+    '''
+    
+    try:
+        data = open_data(data)
+    except Exception as e:
+        raise e
+    
     if inplace:
         data[feature_col] = data[feature_col].apply(lambda r : ' '.join(tokenizer.morphs(r)))
     else:
         data[token_col] = data[feature_col].apply(lambda r : ' '.join(tokenizer.morphs(r)))
     return data
+
+def seriese_tokenize(*series):
+    if len(series) == 1:
+        return series[0].apply(lambda x: ' '.join(tokenizer.morphs(x)))
+    elif len(series) > 1:
+        series = list(series)
+        for s in series:
+            s.apply(lambda x: ' '.join(tokenizer.morphs(x)))
+        return tuple(series)
+    else:
+        raise Exception("the series must be given at least one")
+
 
 # def fasttext_vectorize(data, feature_col = "ko"):
 #     global fasttext_model

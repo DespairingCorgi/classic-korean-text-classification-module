@@ -6,3 +6,26 @@
 #lightgbm - 가벼운 모델
 #XGboost - 근본 부스팅 모델
 #adaboost - 기타 모델
+
+import os
+
+workspace_path = os.getcwd()
+
+def set_workspace(path, option='n'):
+    global workspace_path
+    option = option.lower()
+    if not os.path.exists(path):
+        if option != 'y':    
+            msg = input('do you want to make this directory? [y|n]')
+            if msg.lower() == 'n':
+                print("path establishment failed")
+                return None
+        os.makedirs(path)
+        print("the path established")
+        workspace_path = path
+        return path
+    workspace_path = path    
+    return path
+    
+def use_workspace(data_path):
+    return os.path.join(workspace_path, data_path)
