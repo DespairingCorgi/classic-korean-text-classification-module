@@ -5,3 +5,4 @@ jsons
 warings
 catboost
 lightgbm
+xgboost

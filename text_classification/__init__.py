@@ -2,6 +2,7 @@ from konlpy.tag import Okt
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import classification_report, confusion_matrix
 from .fasttext_pretrained.fasttext_enforcer import get_fasttext_vectors, load_model
+import xgboost as xgb
 
 tokenizer = Okt()
 
@@ -52,9 +53,18 @@ def sklearn_ml(func):
         model,method = func(train_vec, test_vec, args[2], args[3], **kwargs)
         if func.__name__ == "lightgbm_classification":
             initial_preds = model.predict(test_vec, num_iteration=model.best_iteration)
-            if kwargs["num_class"] > 2:
+            if kwargs["num_class"] > 2:  # mult softmax
                 pred = [p.argmax() for p in initial_preds]
-            elif kwargs["num_class"] == 2:
+            elif kwargs["num_class"] == 2: # logistic binary
+                pred = [1 if p >= 0.5 else 0 for p in initial_preds]
+            else:
+                raise Exception("num_class error: input must be integer over 1")
+        elif func.__name__=="xgboost_classification":
+            d_test = xgb.DMatrix(test_vec, args[3])
+            initial_preds = model.predict(d_test)
+            if kwargs["num_class"] > 2: # mult softmax
+                pred = [p.argmax() for p in initial_preds]
+            elif kwargs["num_class"] == 2: # logistic binary
                 pred = [1 if p >= 0.5 else 0 for p in initial_preds]
             else:
                 raise Exception("num_class error: input must be integer over 1")

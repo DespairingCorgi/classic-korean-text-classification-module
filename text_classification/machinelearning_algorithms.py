@@ -15,6 +15,9 @@ from catboost import CatBoostClassifier
 #lightgbm
 import lightgbm as lgb
 
+#xgboost
+import xgboost as xgb
+
 @sklearn_ml
 def multnaive(x_train, x_test, y_train, y_test, **kwargs):
     naive_model = MultinomialNB()
@@ -94,3 +97,40 @@ def lightgbm_classification(x_train, x_test, y_train, y_test, **kwargs):
     lgbm_model = lgb.train(params, d_train, iteration)
     
     return lgbm_model, "lightgbm classifier"
+
+@sklearn_ml
+def xgboost_classification(x_train, x_test, y_train, y_test, **kwargs):
+    '''
+        additional required parameter: num_class (int)
+        optional parameters: 
+            max_depth (int)
+            eta (float)
+            iteration (int)
+    '''
+    if 'num_class' not in kwargs.keys():
+        raise Exception("lightgbm_classification requires a 'num_class' input")
+    max_depth = 6 if 'max_depth' not in kwargs.keys() else kwargs['max_depth']
+    eta = .3 if 'eta' not in kwargs.keys() else kwargs['eta']
+    iteration = 100 if 'iteration' not in kwargs.keys() else kwargs['iteration']
+    if kwargs['num_class'] == 2:
+        params = {
+            'objective': 'binary:logistic',  # for binary classification
+            'eval_metric': 'logloss' if 'eval_metric' not in kwargs.keys() else kwargs['eval_metric'],  # log likelihood loss
+            'max_depth': max_depth,  # depth of the trees in the boosting process
+            'eta': eta,  # step size shrinkage
+        }
+    elif kwargs['num_class'] > 2:
+        params = {
+            'objective': 'multi:softmax',  # for binary classification
+            'eval_metric': 'mlogloss' if 'eval_metric' not in kwargs.keys() else kwargs['eval_metric'],  # log likelihood loss
+            'num_class': kwargs["num_class"],
+            'max_depth': max_depth,  # depth of the trees in the boosting process
+            'eta': eta,  # step size shrinkage
+        }
+    else:
+        raise Exception("num_class error: input must be integer over 1")
+    
+    d_train = xgb.DMatrix(x_train, y_train)
+    model = xgb.train(params, d_train, iteration)
+    return model, "xboost_classification"
+    
