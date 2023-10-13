@@ -54,7 +54,8 @@ def sklearn_ml(func):
         if func.__name__ == "lightgbm_classification":
             initial_preds = model.predict(test_vec, num_iteration=model.best_iteration)
             if kwargs["num_class"] > 2:  # mult softmax
-                pred = [p.argmax() for p in initial_preds]
+                pred = initial_preds.argmax(axis=1) 
+                # [p.argmax() for p in initial_preds]
             elif kwargs["num_class"] == 2: # logistic binary
                 pred = [1 if p >= 0.5 else 0 for p in initial_preds]
             else:
@@ -63,7 +64,8 @@ def sklearn_ml(func):
             d_test = xgb.DMatrix(test_vec, args[3])
             initial_preds = model.predict(d_test)
             if kwargs["num_class"] > 2: # mult softmax
-                pred = [p.argmax() for p in initial_preds]
+                pred = initial_preds.argmax(axis=1) 
+                # [p.argmax() for p in initial_preds]
             elif kwargs["num_class"] == 2: # logistic binary
                 pred = [1 if p >= 0.5 else 0 for p in initial_preds]
             else:
