@@ -8,7 +8,12 @@ from .fasttext_pretrained.fasttext_enforcer import series_to_ft_supervised_forma
 
 import fasttext
 
+
+#catboost
 from catboost import CatBoostClassifier
+
+#lightgbm
+import lightgbm as lgb
 
 @sklearn_ml
 def multnaive(x_train, x_test, y_train, y_test, **kwargs):
@@ -63,3 +68,29 @@ def catboost_classification(x_train, x_test, y_train, y_test, **kwargs):
     print("learning...")
     cb_model.fit(x_train, y_train)
     return cb_model, "catboost classifier"
+
+@sklearn_ml
+def lightgbm_classification(x_train, x_test, y_train, y_test, **kwargs):
+    '''
+        additional required parameter: num_class (int)
+        optional parameter: iteration (int)
+    '''
+    
+    if 'num_class' not in kwargs.keys():
+        raise Exception("lightgbm_classification requires a 'num_class' input")
+    if kwargs['num_class'] == 2:
+        params = {}
+    elif kwargs['num_class'] > 2:
+        params = {
+            'objective': 'multiclass',
+            'num_class': kwargs['num_class']
+        }
+    else:
+        raise Exception("num_class error: input must be integer over 1")
+
+    iteration = kwargs['iteration'] if 'iteration' in kwargs.keys() else 100
+    
+    d_train = lgb.Dataset(x_train, label=y_train)
+    lgbm_model = lgb.train(params, d_train, iteration)
+    
+    return lgbm_model, "lightgbm classifier"

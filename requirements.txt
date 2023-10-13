@@ -4,3 +4,4 @@ pandas
 jsons
 warings
 catboost
+lightgbm

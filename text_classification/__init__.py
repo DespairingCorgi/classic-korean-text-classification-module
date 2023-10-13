@@ -50,7 +50,16 @@ def sklearn_ml(func):
         #print(test_vec.shape)
         
         model,method = func(train_vec, test_vec, args[2], args[3], **kwargs)
-        pred = model.predict(test_vec)
+        if func.__name__ == "lightgbm_classification":
+            initial_preds = model.predict(test_vec, num_iteration=model.best_iteration)
+            if kwargs["num_class"] > 2:
+                pred = [p.argmax() for p in initial_preds]
+            elif kwargs["num_class"] == 2:
+                pred = [1 if p >= 0.5 else 0 for p in initial_preds]
+            else:
+                raise Exception("num_class error: input must be integer over 1")
+        else:
+            pred = model.predict(test_vec)
         print("="*100)
         print(f"Method: {method}")
         print(classification_report(args[3], pred))
