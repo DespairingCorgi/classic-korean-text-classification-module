@@ -67,7 +67,10 @@ def catboost_classification(x_train, x_test, y_train, y_test, **kwargs):
     d = kwargs['depth'] if 'depth' in kwargs.keys() else 6
     lr = kwargs['learning_rate'] if 'learning_rate' in kwargs.keys() else .1
     
-    cb_model = CatBoostClassifier(iterations=its, depth=d, learning_rate=lr, verbose=0)
+    #lossfunction = 'Logloss' or 'MutiClass'
+    loss_function = kwargs['loss_function'] if 'loss_function' in kwargs.keys() else 'Logloss'
+    
+    cb_model = CatBoostClassifier(loss_function=loss_function, iterations=its, depth=d, learning_rate=lr, verbose=0)
     print("learning...")
     cb_model.fit(x_train, y_train)
     return cb_model, "catboost classifier"
