@@ -146,3 +146,55 @@ def xgboost_classification(x_train, x_test, y_train, y_test, **kwargs):
     d_train = xgb.DMatrix(x_train, y_train)
     model = xgb.train(params, d_train, iteration)
     return model, "xboost_classification"
+
+
+MODELS = [
+    'complementnb',
+    'dt',
+    'svc',
+    'rf'
+]
+@sklearn_ml
+def adaboost_classifier(x_train, x_test, y_train, y_test, **kwargs):
+    '''
+        additional required parameter: model (str)
+        
+        optional parameters for adaboost:
+            ada_n_estimators (int) : for adaboost
+            ada_random_state (int) : larger than 0
+            ada_learning_rate (float) : larger than 0 smaller than 1
+        
+        optional prameters by model:
+            random_state (int) : for dt/rf option
+            rf_n_estimators (int) : for rf option
+            
+    '''
+    
+    if 'model' not in kwargs.kes(): raise Exception("input 'model' is required for adaboost classifier")
+    if kwargs["model"].lower() not in MODELS:
+        raise Exception(f"the model must be one of {MODELS}")
+    model_name = kwargs["model"].lower()
+    
+    if model_name == 'complementnb':
+        model = ComplementNB()
+    elif model_name == 'dt':
+        model = DecisionTreeClassifier(max_depth=1, \
+            random_state= kwargs['random_state'] if 'random_state' in kwargs.keys() else 42)
+    elif model_name == 'svc':
+        model = SVC(kernel='linear', probability=False)
+    elif model_name == 'rf':
+        model = RandomForestClassifier(max_depth=1, \
+            random_state= kwargs['random_state'] if 'random_state' in kwargs.keys() else 42, \
+            n_estimators= kwargs['rf_n_estimators'] if 'rf_n_estomators' in kwargs.keys() else 42)
+    else:
+        raise Exception("unkown error")
+
+    model = AdaBoostClassifier(model, \
+        n_estimators= kwargs["ada_n_estimators"] if "ada_n_estimators" in kwargs.keys() else 50, \
+        random_state= kwargs["ada_random_state"] if "ada_random_state" in kwargs.keys() else 42, \
+        learning_rate= kwargs["ada_learning_rate"] if "ada_learning_rate" in kwargs.keys() else 1.0
+        )
+
+    model.fit(x_train, y_train)
+    
+    return model, f"adaboost classifier {model_name}"
