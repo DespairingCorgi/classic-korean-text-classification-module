@@ -48,7 +48,7 @@ def rf(x_train, x_test, y_train, y_test, **kwargs):
 def compnaive(x_train, x_test, y_train, y_test, **kwargs):
     naive_model = ComplementNB()
     naive_model.fit(x_train, y_train)
-    return 
+    return naive_model, "complement naive"
     
 
 def fasttext_supervised(x_train, x_test, y_train, y_test, \
@@ -154,6 +154,7 @@ MODELS = [
     'svc',
     'rf'
 ]
+
 @sklearn_ml
 def adaboost_classifier(x_train, x_test, y_train, y_test, **kwargs):
     '''
