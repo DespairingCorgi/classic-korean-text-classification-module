@@ -171,7 +171,7 @@ def adaboost_classifier(x_train, x_test, y_train, y_test, **kwargs):
             
     '''
     
-    if 'model' not in kwargs.kes(): raise Exception("input 'model' is required for adaboost classifier")
+    if 'model' not in kwargs.keys(): raise Exception("input 'model' is required for adaboost classifier")
     if kwargs["model"].lower() not in MODELS:
         raise Exception(f"the model must be one of {MODELS}")
     model_name = kwargs["model"].lower()
@@ -197,5 +197,6 @@ def adaboost_classifier(x_train, x_test, y_train, y_test, **kwargs):
         )
 
     model.fit(x_train, y_train)
+    result = f"adaboost classifier {model_name}"
     
-    return model, f"adaboost classifier {model_name}"
+    return model, result
