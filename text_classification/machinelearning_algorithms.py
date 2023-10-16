@@ -1,4 +1,5 @@
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.naive_bayes import ComplementNB
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
@@ -18,6 +19,9 @@ import lightgbm as lgb
 #xgboost
 import xgboost as xgb
 
+#adaboost
+from sklearn.ensemble import AdaBoostClassifier
+
 @sklearn_ml
 def multnaive(x_train, x_test, y_train, y_test, **kwargs):
     naive_model = MultinomialNB()
@@ -29,7 +33,6 @@ def svc(x_train, x_test, y_train, y_test, **kwargs):
         random_state= kwargs['random_state'] if 'random_state' in kwargs.keys() else 42)
     svm_model.fit(x_train, y_train)
     return svm_model, "support vector classification"
-
 @sklearn_ml
 def dt(x_train, x_test, y_train, y_test, **kwargs):
     dt_model = DecisionTreeClassifier(random_state= kwargs['random_state'] if 'random_state' in kwargs.keys() else 42)
@@ -40,6 +43,13 @@ def rf(x_train, x_test, y_train, y_test, **kwargs):
     dt_model = RandomForestClassifier(random_state= kwargs['random_state'] if 'random_state' in kwargs.keys() else 42)
     dt_model.fit(x_train, y_train)
     return dt_model, "random forest"
+
+@sklearn_ml
+def compnaive(x_train, x_test, y_train, y_test, **kwargs):
+    naive_model = ComplementNB()
+    naive_model.fit(x_train, y_train)
+    return 
+    
 
 def fasttext_supervised(x_train, x_test, y_train, y_test, \
     train_file_name = 'tmp_train.txt', test_file_name = 'tmp_test.txt', \
@@ -136,4 +146,3 @@ def xgboost_classification(x_train, x_test, y_train, y_test, **kwargs):
     d_train = xgb.DMatrix(x_train, y_train)
     model = xgb.train(params, d_train, iteration)
     return model, "xboost_classification"
-    
