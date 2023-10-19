@@ -117,7 +117,7 @@ def sklearn_ml(func):
             "method":method,
         }
         if func.__name__ == "lightgbm_classification" or func.__name__ == "xgboost_classification":
-            d["is_binary"] = True if kwargs["num_class"] > 2 else False
+            d["is_binary"] = True if kwargs["num_class"] <= 2 else False
         test_model(model, test_vec, args[3], **d)
         
         return model
