@@ -35,6 +35,7 @@ def svc(x_train, x_test, y_train, y_test, **kwargs):
     return svm_model, "support vector classification"
 @sklearn_ml
 def dt(x_train, x_test, y_train, y_test, **kwargs):
+    #print("started training...")
     dt_model = DecisionTreeClassifier(random_state= kwargs['random_state'] if 'random_state' in kwargs.keys() else 42)
     dt_model.fit(x_train, y_train)
     return dt_model, "decision tree"
@@ -182,7 +183,7 @@ def adaboost_classifier(x_train, x_test, y_train, y_test, **kwargs):
         model = DecisionTreeClassifier(max_depth=1, \
             random_state= kwargs['random_state'] if 'random_state' in kwargs.keys() else 42)
     elif model_name == 'svc':
-        model = SVC(kernel='linear', probability=False)
+        model = SVC(kernel='linear', probability=True, decision_function_shape='ovr')
     elif model_name == 'rf':
         model = RandomForestClassifier(max_depth=1, \
             random_state= kwargs['random_state'] if 'random_state' in kwargs.keys() else 42, \
