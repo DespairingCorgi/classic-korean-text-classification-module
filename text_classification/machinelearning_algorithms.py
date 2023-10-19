@@ -172,26 +172,26 @@ def adaboost_classifier(x_train, x_test, y_train, y_test, **kwargs):
             
     '''
     
-    # if 'model' not in kwargs.keys(): raise Exception("input 'model' is required for adaboost classifier")
-    # if kwargs["model"].lower() not in MODELS:
-    #     raise Exception(f"the model must be one of {MODELS}")
-    # model_name = kwargs["model"].lower()
+    if 'model' not in kwargs.keys(): raise Exception("input 'model' is required for adaboost classifier")
+    if kwargs["model"].lower() not in MODELS:
+        raise Exception(f"the model must be one of {MODELS}")
+    model_name = kwargs["model"].lower()
     
-    # if model_name == 'complementnb':
-    #     model = ComplementNB()
-    # elif model_name == 'dt':
-    #     model = DecisionTreeClassifier(max_depth=1, \
-    #         random_state= kwargs['random_state'] if 'random_state' in kwargs.keys() else 42)
-    # elif model_name == 'svc':
-    #     model = SVC(kernel='linear', probability=True, decision_function_shape='ovr')
-    # elif model_name == 'rf':
-    #     model = RandomForestClassifier(max_depth=1, \
-    #         random_state= kwargs['random_state'] if 'random_state' in kwargs.keys() else 42, \
-    #         n_estimators= kwargs['rf_n_estimators'] if 'rf_n_estomators' in kwargs.keys() else 42)
-    # else:
-    #     raise Exception("unkown error")
+    if model_name == 'complementnb':
+        model = ComplementNB()
+    elif model_name == 'dt':
+        model = DecisionTreeClassifier(max_depth=1, \
+            random_state= kwargs['random_state'] if 'random_state' in kwargs.keys() else 42)
+    elif model_name == 'svc':
+        model = SVC(kernel='linear', probability=True, decision_function_shape='ovr')
+    elif model_name == 'rf':
+        model = RandomForestClassifier(max_depth=1, \
+            random_state= kwargs['random_state'] if 'random_state' in kwargs.keys() else 42, \
+            n_estimators= kwargs['rf_n_estimators'] if 'rf_n_estomators' in kwargs.keys() else 42)
+    else:
+        raise Exception("unkown error")
 
-    model = AdaBoostClassifier(\
+    model = AdaBoostClassifier(model, \
         n_estimators= kwargs["ada_n_estimators"] if "ada_n_estimators" in kwargs.keys() else 50, \
         random_state= kwargs["ada_random_state"] if "ada_random_state" in kwargs.keys() else None, \
         learning_rate= kwargs["ada_learning_rate"] if "ada_learning_rate" in kwargs.keys() else 1.0
