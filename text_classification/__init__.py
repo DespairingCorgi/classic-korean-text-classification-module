@@ -47,7 +47,9 @@ def test_model(model, x_test, y_test, **kwargs):
     else:
         pred = model.predict(x_test)
     
-    report_result(method, y_test, pred)        
+    report_result(method, y_test, pred)   
+    
+    return pred     
 
 
 def tf_vectorize(texts, **kwargs):
