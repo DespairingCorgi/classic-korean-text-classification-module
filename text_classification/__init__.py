@@ -58,21 +58,32 @@ def tf_vectorize(texts, **kwargs):
         return vectorizer.fit_transform(texts)
 
 def tf_vectorize_sets(*textsets, **kwargs):
+    '''
+        vectorizer_model -> TfidfVectorizer
+    '''
+    
+    
     if "vectorizer_model" in kwargs.keys():
         vectorizer = kwargs["vectorizer_model"]
     else:
         vectorizer = TfidfVectorizer()
     
-    return vectorizer, [vectorizer.fit_transform(texts) if i == 0 \
+    vectorized_textsets = [vectorizer.fit_transform(texts) if i == 0 \
         else vectorizer.transform(texts) \
         for i, texts in enumerate(textsets)]
+    
+    if "get_vectorizer" in kwargs.keys():
+        if kwargs["get_vectorizer"] == True:
+            return vectorizer, vectorized_textsets
+    
+    return vectorized_textsets
 
 def fasttext_vectorize_sets(*textsets, **kwargs):
     '''
         model (str) model file name or None(for default model)
     '''
     global fasttext_model
-    global cur_model
+    global cur_fasttext_model
     
     vectorizer=None
     if "model" in kwargs.keys():
@@ -87,8 +98,14 @@ def fasttext_vectorize_sets(*textsets, **kwargs):
         if vectorizer != cur_fasttext_model:
             fasttext_model = load_model(model_name=vectorizer)
         cur_fasttext_model = vectorizer
+    
+    vectorized_textsets = [get_fasttext_vectors(fasttext_model, texts.values.tolist()) for texts in textsets]
+    
+    if "get_vectorizer" in kwargs.keys():
+        if kwargs["get_vectorizer"] == True:
+            return vectorizer, vectorized_textsets
         
-    return vectorizer, [get_fasttext_vectors(fasttext_model, texts.values.tolist()) for texts in textsets]
+    return vectorizer, vectorized_textsets
         
 
 
@@ -102,10 +119,10 @@ def sklearn_ml(func):
             vector_mode = 'tf'
         
         if vector_mode in tf_vec:
-            vectorizer, (train_vec, test_vec) = tf_vectorize_sets(args[0], args[1], vectorizer_model=TfidfVectorizer())
+            vectorizer, (train_vec, test_vec) = tf_vectorize_sets(args[0], args[1], vectorizer_model=TfidfVectorizer(), get_vectorizer = True)
                 
         elif vector_mode.lower() in ft_vec:
-            vectorizer, (train_vec, test_vec) = fasttext_vectorize_sets(args[0], args[1])
+            vectorizer, (train_vec, test_vec) = fasttext_vectorize_sets(args[0], args[1], get_vectorizer=True)
         else:
             pass
         
