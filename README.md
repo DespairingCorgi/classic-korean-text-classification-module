@@ -1,5 +1,5 @@
 # classic-korean-text-classification-module
-classic text classification module for korean.
+A classic text classification ml module for korean.
 
 caution:
 
@@ -12,4 +12,4 @@ To install 'fasttext' module in windows environment, follow the steps below.
 1. from link, download proper version of fasttext module (python version, os-bit) 
    https://www.lfd.uci.edu/~gohlke/pythonlibs/#fasttext
 2. using pip, install the module.
-   e.g) pip install <YOURMODULEPATH>
+   e.g) pip install WHL_PATH
