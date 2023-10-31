@@ -32,8 +32,7 @@ def reset_workspace():
     
 def workspace(data_path):
     global cur_workspace
-    lst = data_path.split('/')
-    return os.path.join(cur_workspace, *lst)
+    return '/'.join([cur_workspace, data_path])
 
 def get_workspace():
     global cur_workspace

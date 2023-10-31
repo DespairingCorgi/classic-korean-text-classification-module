@@ -24,6 +24,20 @@ from sklearn.ensemble import AdaBoostClassifier
 
 @sklearn_ml
 def multnaive(x_train, x_test, y_train, y_test, **kwargs):
+    """
+    
+    multnaive:
+        multinomial naive baysis model training and testing(automated)
+    
+    :param x_train: training feature of vectorized iterable(np) data type e.g) pandas.Series
+    :param y_train: training label of indexed iterable datatpe e.g) pandas.Series
+    :param x_test: test feature of vectorized iterable(np) data type e.g) pandas.Series
+    :param y_test: test label of indexed iterable datatpe e.g) pandas.Series
+
+    :kwarg veoctorizer: tf(tfvectorizer) or ft(fasttext)
+
+    :return (MultinomialNB, str)
+    """
     naive_model = MultinomialNB()
     naive_model.fit(x_train, y_train)
     return naive_model, "multinomial naive"
@@ -92,7 +106,7 @@ def lightgbm_classification(x_train, x_test, y_train, y_test, **kwargs):
         additional required parameter: num_class (int)
         optional parameter: iteration (int)
     '''
-    
+
     if 'num_class' not in kwargs.keys():
         raise Exception("lightgbm_classification requires a 'num_class' input")
     if kwargs['num_class'] == 2:
