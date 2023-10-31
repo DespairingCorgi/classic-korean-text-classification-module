@@ -1,0 +1,17 @@
+#ignore all files with .csv extensions
+*.csv
+*.txt
+
+#ignore main.py file
+main.py
+
+#ignore all pycache
+__pycache__/
+catboost_info/
+
+#ignore .by file and .gz
+*.gz
+*.bin
+*.whl
+
+#ignore vs code settings
